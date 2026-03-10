@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Search Weakpoints</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background: #e8e8e0;
+  color: #222;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+#box {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.3em;
+  text-align: center;
+  margin: 0 0 2px 0;
+}
+
+p.sub {
+  text-align: center;
+  font-size: 0.85em;
+  color: #555;
+  margin: 0 0 10px 0;
+}
+
+p.intro {
+  max-width: 500px;
+  margin: 16px auto;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.start-wrap {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
+  text-align: center;
+  margin: 16px 0;
+}
+
+button.big {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1em;
+  padding: 10px 40px;
+  cursor: pointer;
+  background: #c0c0c0;
+  border: 3px outset #ddd;
+  margin-top: 20px;
+}
+
+button.big:hover { background: #b0b0a8; }
+button.big:active { border-style: inset; }
+
+.progress-wrap {
+  margin-bottom: 16px;
+}
+
+.progress-text {
+  font-size: 0.8em;
+  color: #555;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.progress-bar {
+  background: #ddd;
+  border: 1px solid #999;
+  height: 12px;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4a6fa5;
+  transition: width 0.3s;
+}
+
+.q-wrap {
+  border: 2px solid #999;
+  background: #f4f4ee;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.q-label {
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 12px;
+}
+
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+button.opt {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #ddd;
+  border: 2px outset #eee;
+  font-size: 0.9em;
+  text-align: left;
+}
+
+button.opt:hover { background: #ccc; }
+button.opt:active { border-style: inset; }
+
+button.opt.checked {
+  background: #666;
+  color: #fff;
+  border: 2px solid #333;
+}
+
+button.nav {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 4px 12px;
+  cursor: pointer;
+  background: #c0c0c0;
+  border: 2px outset #ddd;
+  font-size: 0.85em;
+}
+
+button.nav:hover { background: #b0b0a8; }
+button.nav:active { border-style: inset; }
+
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.num-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.num-input-wrap input {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1em;
+  padding: 6px 10px;
+  border: 2px solid #999;
+  background: #fff;
+  width: 120px;
+}
+
+.num-input-wrap button {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 6px 14px;
+  cursor: pointer;
+  background: #ddd;
+  border: 2px outset #eee;
+  font-size: 0.9em;
+}
+
+.num-input-wrap button:hover { background: #ccc; }
+.num-input-wrap button:active { border-style: inset; }
+
+.results-wrap {
+  border: 2px solid #777;
+  background: #faf8f0;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.r-opening {
+  font-weight: bold;
+  font-size: 1.05em;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.r-section {
+  margin-bottom: 16px;
+}
+
+.r-section-title {
+  font-weight: bold;
+  font-size: 0.95em;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 3px;
+}
+
+.r-text {
+  font-size: 0.9em;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+.r-strength {
+  font-size: 0.88em;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.r-closing {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #444;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #ccc;
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+
+<div id="box"></div>
+
+<script>
+var B = document.getElementById("box");
+
+var answers = {};
+var flags = {};
+var scores = {};
+var numericAnswers = {};
+
+function resetScores() {
+  scores = { resume:0, targeting:0, volume:0, networking:0, gettingInterviews:0, earlyStage:0, midStage:0, lateStage:0 };
+}
+
+function resetAll() {
+  answers = {};
+  flags = {};
+  numericAnswers = {};
+  resetScores();
+}
+
+// ============================================================
+// QUESTION DEFINITIONS
+// ============================================================
+var allQuestions = [
+  {
+    id: "q1",
+    label: "Are you qualified for the jobs you are applying for?",
+    type: "single",
+    options: [
+      { text: "Yes, all of them", score: function(){ scores.targeting += 3; } },
+      { text: "Most of them", score: function(){ scores.targeting += 1; } },
+      { text: "Less than half", score: function(){ scores.targeting -= 2; } },
+      { text: "I apply to most jobs regardless of qualifications", score: function(){ scores.targeting -= 4; scores.volume -= 2; } }
+    ],
+    condition: null
+  },
+  {
+    id: "q2",
+    label: "How many versions of your resume are you using?",
+    type: "single",
+    options: [
+      { text: "1", score: function(){ scores.resume -= 3; } },
+      { text: "2", score: function(){ } },
+      { text: "3 or more", score: function(){ scores.resume += 2; } },
+      { text: "I tailor my resume for each application or category of application", score: function(){ scores.resume += 4; } }
+    ],
+    condition: null
+  },
+  {
+    id: "q3",
+    label: "How many job applications have you sent since seriously starting your job search?",
+    type: "number",
+    scoreNum: function(n) {
+      if (n > 1000) { scores.volume -= 2; scores.resume -= 3; scores.targeting -= 2; flags.EXTREME_VOLUME = true; }
+      else if (n >= 500) { scores.volume += 2; scores.resume -= 1; flags.HIGH_VOLUME = true; }
+      else if (n >= 200) { scores.volume += 3; }
+      else if (n >= 100) { scores.volume += 2; }
+      else if (n >= 50) { }
+      else { scores.volume -= 2; flags.SMALL_SAMPLE = true; }
+    },
+    condition: null
+  },
+  {
+    id: "q4",
+    label: "How many LinkedIn connections do you have? (Enter 0 if you do not have a LinkedIn account)",
+    type: "number",
+    scoreNum: function(n) {
+      if (n === 0) { scores.networking -= 4; flags.NO_LINKEDIN = true; }
+      else if (n < 100) { scores.networking -= 1; }
+      else if (n < 250) { scores.networking += 1; }
+      else if (n < 500) { scores.networking += 2; }
+      else { scores.networking += 3; }
+    },
+    condition: null
+  },
+  {
+    id: "q5",
+    label: "How many recruiters have you connected with on LinkedIn for roles you are qualified for?",
+    type: "number",
+    scoreNum: function(n) {
+      if (n === 0) { scores.networking -= 3; }
+      else if (n <= 10) { scores.networking -= 1; }
+      else if (n <= 50) { scores.networking += 1; }
+      else if (n <= 100) { scores.networking += 3; }
+      else if (n <= 200) { scores.networking += 4; }
+      else { scores.networking += 5; flags.HIGH_RECRUITER_CONNECTIONS = true; }
+    },
+    condition: function() { return hasLinkedIn(); }
+  },
+  {
+    id: "q6",
+    label: "Have any of your recruiter connections led to interviews?",
+    type: "single",
+    options: [
+      { text: "Yes, several", score: function(){ scores.networking += 2; scores.gettingInterviews += 1; } },
+      { text: "Yes, a few", score: function(){ scores.networking += 1; } },
+      { text: "No, none of them", score: function(){ scores.networking -= 2; flags.CONNECTIONS_NOT_CONVERTING = true; } },
+      { text: "Not sure", score: function(){ } }
+    ],
+    condition: function() { return hasLinkedIn() && numericAnswers["q5"] !== undefined && numericAnswers["q5"] >= 11; }
+  },
+  {
+    id: "q7",
+    label: "Are you using all 5 of your personalized LinkedIn connection requests per month?",
+    type: "single",
+    options: [
+      { text: "Yes, every month", score: function(){ scores.networking += 2; } },
+      { text: "Sometimes", score: function(){ } },
+      { text: "No", score: function(){ scores.networking -= 1; } },
+      { text: "I did not know about this limit", score: function(){ flags.DIDNT_KNOW_LIMIT = true; } },
+      { text: "I have LinkedIn Premium", score: function(){ scores.networking += 1; flags.HAS_PREMIUM = true; } }
+    ],
+    condition: function() { return hasLinkedIn(); }
+  },
+  {
+    id: "q8",
+    label: "How many of your LinkedIn connections could potentially refer you for a job?",
+    type: "single",
+    options: [
+      { text: "I have not thought about this", score: function(){ flags.REFERRAL_BLIND_SPOT = true; } },
+      { text: "Very few, maybe 1 to 5", score: function(){ } },
+      { text: "A decent number, maybe 10 to 30", score: function(){ scores.networking += 1; } },
+      { text: "A lot, 30+", score: function(){ scores.networking += 2; } }
+    ],
+    condition: function() { return hasLinkedIn(); }
+  },
+  {
+    id: "q9",
+    label: "How many interviews have you received since seriously starting your job search? (Any instance of talking to a real human or even an AI video interview counts)",
+    type: "number",
+    scoreNum: function(n) {
+      applyInterviewRate(n);
+    },
+    condition: null
+  },
+  {
+    id: "q10",
+    label: "Of the interviews you have received, how did they come about?",
+    type: "single",
+    options: [
+      { text: "All or almost all from cold applications", score: function(){ scores.resume += 2; flags.COLD_APPS_WORKING = true; } },
+      { text: "All or almost all from networking or referrals", score: function(){ scores.resume -= 1; scores.networking += 2; flags.NETWORKING_CARRYING = true; } },
+      { text: "A mix of both", score: function(){ scores.resume += 1; scores.networking += 1; } }
+    ],
+    condition: function() { return hasInterviews(); }
+  },
+  {
+    id: "q11",
+    label: "Are you satisfied with the number of interviews you are receiving?",
+    type: "single",
+    options: [
+      { text: "Yes, I am getting enough interviews", score: function(){ } },
+      { text: "No, I want more interviews", score: function(){ scores.gettingInterviews -= 1; flags.WANTS_MORE_INTERVIEWS = true; } }
+    ],
+    condition: function() { return hasInterviews(); }
+  },
+  {
+    id: "q12",
+    label: "What type of role are you interviewing for?",
+    type: "single",
+    options: [
+      { text: "Technical (engineering, data, IT, creative/art)", score: function(){ } },
+      { text: "Non-technical", score: function(){ } },
+      { text: "A mix of both", score: function(){ } }
+    ],
+    condition: function() { return hasInterviews(); }
+  },
+  {
+    id: "q13",
+    label: "For technical roles, how far are you generally getting in interviews?",
+    type: "single",
+    options: [
+      { text: "I never make it past the OAs (online assessments)", score: function(){ scores.earlyStage -= 3; flags.FAILING_OAS = true; } },
+      { text: "I pass OAs but never make it past the first call", score: function(){ scores.earlyStage -= 1; flags.PASS_OA_FAIL_CALL = true; } },
+      { text: "I never make it past the first call", score: function(){ scores.earlyStage -= 3; } },
+      { text: "I make it past the first call and occasionally to the second interview", score: function(){ scores.midStage -= 1; } },
+      { text: "I usually do not make it to the third interview", score: function(){ scores.midStage -= 2; } },
+      { text: "I consistently make it to the second interview and occasionally to the third or final", score: function(){ scores.midStage += 1; } },
+      { text: "I make it to the final interview sometimes", score: function(){ scores.lateStage += 2; } },
+      { text: "I almost always make it to the final interview", score: function(){ scores.lateStage += 4; } }
+    ],
+    condition: function() { return hasInterviews() && answers["q12"] !== undefined && (answers["q12"] === 0 || answers["q12"] === 2); }
+  },
+  {
+    id: "q14",
+    label: "For non-technical roles, how far are you generally getting in interviews?",
+    type: "single",
+    options: [
+      { text: "I never make it past the first call", score: function(){ scores.earlyStage -= 3; } },
+      { text: "I make it past the first call and occasionally to the second interview", score: function(){ scores.midStage -= 1; } },
+      { text: "I usually do not make it to the third interview", score: function(){ scores.midStage -= 2; } },
+      { text: "I consistently make it to the second interview and occasionally to the third or final", score: function(){ scores.midStage += 1; } },
+      { text: "I make it to the final interview sometimes", score: function(){ scores.lateStage += 2; } },
+      { text: "I almost always make it to the final interview", score: function(){ scores.lateStage += 4; } }
+    ],
+    condition: function() { return hasInterviews() && answers["q12"] !== undefined && (answers["q12"] === 1 || answers["q12"] === 2); }
+  },
+  {
+    id: "q15",
+    label: "Of your first interviews (recruiter or HR screens), how many did you advance past?",
+    type: "single",
+    options: [
+      { text: "None", score: function(){ scores.earlyStage -= 3; flags.FAILING_ALL_FIRST_CALLS = true; } },
+      { text: "Less than half", score: function(){ scores.earlyStage -= 1; } },
+      { text: "About half", score: function(){ } },
+      { text: "More than half", score: function(){ scores.earlyStage += 1; } },
+      { text: "All or almost all", score: function(){ scores.earlyStage += 3; } }
+    ],
+    condition: function() { return numericAnswers["q9"] !== undefined && numericAnswers["q9"] >= 5; }
+  },
+  {
+    id: "q16",
+    label: "Do you practice interview questions before interviews?",
+    type: "single",
+    options: [
+      { text: "Yes, regularly", score: function(){ scores.earlyStage += 2; scores.midStage += 2; } },
+      { text: "Sometimes", score: function(){ } },
+      { text: "No", score: function(){ scores.earlyStage -= 2; scores.midStage -= 2; flags.NOT_PRACTICING = true; } }
+    ],
+    condition: function() { return hasInterviews(); }
+  },
+  {
+    id: "q17",
+    label: "Can you confidently answer these common interview questions? (Select all that apply, then click Next)",
+    type: "checklist",
+    options: [
+      { text: "Tell me about yourself", field: "earlyStage" },
+      { text: "Talk about a project or accomplishment you are proud of", field: "midStage" },
+      { text: "Talk about a time you failed and what you learned", field: "midStage" },
+      { text: "Talk about a time you had a disagreement and how you handled it", field: "midStage" },
+      { text: "Thoughtful questions to ask at the end of an interview", field: "midStage", field2: "lateStage" }
+    ],
+    condition: function() { return hasInterviews(); }
+  },
+  {
+    id: "q18",
+    label: "How long have you been seriously job searching?",
+    type: "single",
+    options: [
+      { text: "Less than 1 month", score: function(){ } },
+      { text: "1 to 3 months", score: function(){ } },
+      { text: "3 to 6 months", score: function(){ } },
+      { text: "6 to 12 months", score: function(){ } },
+      { text: "More than 1 year", score: function(){ } }
+    ],
+    condition: null
+  }
+];
+
+// ============================================================
+// CONDITION HELPERS
+// ============================================================
+function hasLinkedIn() {
+  var n = numericAnswers["q4"];
+  return n !== undefined && n > 0;
+}
+
+function hasInterviews() {
+  return numericAnswers["q9"] !== undefined && numericAnswers["q9"] > 0;
+}
+
+// ============================================================
+// INTERVIEW RATE CALCULATION
+// ============================================================
+function applyInterviewRate(interviewCount) {
+  var appCount = numericAnswers["q3"];
+  if (appCount === undefined || appCount === 0) return;
+
+  if (interviewCount === 0) {
+    if (appCount >= 100) {
+      scores.gettingInterviews -= 4;
+      scores.resume -= 4;
+      flags.ZERO_INTERVIEWS_HIGH_APPS = true;
+    } else {
+      scores.gettingInterviews -= 1;
+      flags.ZERO_INTERVIEWS_LOW_APPS = true;
+    }
+    return;
+  }
+
+  var rate = (interviewCount / appCount) * 100;
+  if (rate >= 10) {
+    scores.gettingInterviews += 4;
+    scores.resume += 2;
+  } else if (rate >= 5) {
+    scores.gettingInterviews += 2;
+    scores.resume += 1;
+  } else if (rate >= 1) {
+    // average
+  } else {
+    scores.gettingInterviews -= 2;
+    scores.resume -= 3;
+  }
+}
+
+// ============================================================
+// ACTIVE QUESTIONS
+// ============================================================
+function getActiveQuestions() {
+  var active = [];
+  for (var i = 0; i < allQuestions.length; i++) {
+    var q = allQuestions[i];
+    if (q.condition === null || q.condition()) {
+      active.push(q);
+    }
+  }
+  return active;
+}
+
+function getActiveIndex(activeList, qId) {
+  for (var i = 0; i < activeList.length; i++) {
+    if (activeList[i].id === qId) return i;
+  }
+  return -1;
+}
+
+function getAllIndex(qId) {
+  for (var i = 0; i < allQuestions.length; i++) {
+    if (allQuestions[i].id === qId) return i;
+  }
+  return -1;
+}
+
+// ============================================================
+// RECALCULATE
+// ============================================================
+function recalcScores() {
+  resetScores();
+  flags = {};
+  for (var i = 0; i < allQuestions.length; i++) {
+    var q = allQuestions[i];
+    if (q.type === "number") {
+      if (numericAnswers[q.id] !== undefined) {
+        q.scoreNum(numericAnswers[q.id]);
+      }
+    } else if (q.type === "checklist") {
+      if (answers[q.id] !== undefined) {
+        var checked = answers[q.id];
+        for (var c = 0; c < q.options.length; c++) {
+          var opt = q.options[c];
+          if (checked[c]) {
+            scores[opt.field] += 1;
+            if (opt.field2) scores[opt.field2] += 1;
+          } else {
+            scores[opt.field] -= 1;
+            if (opt.field2) scores[opt.field2] -= 1;
+          }
+        }
+      }
+    } else {
+      if (answers[q.id] !== undefined) {
+        q.options[answers[q.id]].score();
+      }
+    }
+  }
+}
+
+// ============================================================
+// BEGIN
+// ============================================================
+function showBegin() {
+  resetAll();
+  B.innerHTML = '<div class="start-wrap">'
+    + '<h1>Job Search Weakpoints</h1>'
+    + '<p class="sub">A Diagnostic Tool / by Anto Park</p>'
+    + '<p class="intro">This tool asks you a series of questions about your job search and identifies where you might be struggling. It is not a test. There are no wrong answers. Answer honestly and you will get an honest reading.</p>'
+    + '<div class="center"><button class="big" onclick="showQ(\'q1\')">Begin</button></div>'
+    + '</div>';
+}
+
+// ============================================================
+// SHOW QUESTION
+// ============================================================
+function showQ(qId) {
+  var active = getActiveQuestions();
+  var idx = getActiveIndex(active, qId);
+
+  if (idx === -1) {
+    var ai = getAllIndex(qId);
+    for (var j = ai + 1; j < allQuestions.length; j++) {
+      var nq = allQuestions[j];
+      if (nq.condition === null || nq.condition()) {
+        showQ(nq.id);
+        return;
+      }
+    }
+    showResults();
+    return;
+  }
+
+  var q = active[idx];
+  var total = active.length;
+  var pct = Math.round((idx / total) * 100);
+
+  var h = '<h1>Job Search Weakpoints</h1>'
+    + '<p class="sub">A Diagnostic Tool / by Anto Park</p>'
+    + '<div class="progress-wrap">'
+    + '<div class="progress-text">Question ' + (idx + 1) + ' of ' + total + '</div>'
+    + '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>'
+    + '</div>';
+
+  h += '<div class="q-wrap">';
+  h += '<div class="q-label">' + q.label + '</div>';
+
+  if (q.type === "number") {
+    var curVal = numericAnswers[q.id] !== undefined ? numericAnswers[q.id] : "";
+    h += '<div class="num-input-wrap">';
+    h += '<input type="number" id="numInput" min="0" value="' + curVal + '" placeholder="Enter a number">';
+    h += '<button onclick="submitNumber(\'' + q.id + '\')">Submit</button>';
+    h += '</div>';
+  } else if (q.type === "checklist") {
+    var checked = answers[q.id] || [];
+    h += '<div class="q-options">';
+    for (var k = 0; k < q.options.length; k++) {
+      var cls = checked[k] ? "opt checked" : "opt";
+      h += '<button class="' + cls + '" onclick="toggleCheck(\'' + q.id + '\',' + k + ')">' + q.options[k].text + '</button>';
+    }
+    h += '</div>';
+  } else {
+    h += '<div class="q-options">';
+    for (var k2 = 0; k2 < q.options.length; k2++) {
+      h += '<button class="opt" onclick="pickAnswer(\'' + q.id + '\',' + k2 + ')">' + q.options[k2].text + '</button>';
+    }
+    h += '</div>';
+  }
+
+  h += '</div>';
+
+  h += '<div class="nav-row">';
+  if (idx > 0) {
+    h += '<button class="nav" onclick="showQ(\'' + active[idx - 1].id + '\')">Back</button>';
+  } else {
+    h += '<button class="nav" onclick="showBegin()">Back</button>';
+  }
+  if (q.type === "checklist") {
+    h += '<button class="nav" onclick="advanceFrom(\'' + q.id + '\')">Next</button>';
+  } else {
+    h += '<span></span>';
+  }
+  h += '</div>';
+
+  B.innerHTML = h;
+
+  if (q.type === "number") {
+    var inp = document.getElementById("numInput");
+    if (inp) {
+      inp.focus();
+      inp.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") submitNumber(q.id);
+      });
+    }
+  }
+}
+
+// ============================================================
+// ANSWER HANDLERS
+// ============================================================
+function pickAnswer(qId, optIdx) {
+  answers[qId] = optIdx;
+  recalcScores();
+  setTimeout(function() { advanceFrom(qId); }, 250);
+}
+
+function submitNumber(qId) {
+  var inp = document.getElementById("numInput");
+  if (!inp) return;
+  var val = parseInt(inp.value);
+  if (isNaN(val) || val < 0) {
+    inp.style.borderColor = "#a00";
+    return;
+  }
+  numericAnswers[qId] = val;
+  recalcScores();
+  setTimeout(function() { advanceFrom(qId); }, 250);
+}
+
+function toggleCheck(qId, idx) {
+  var q = allQuestions[getAllIndex(qId)];
+  if (!answers[qId]) {
+    answers[qId] = [];
+    for (var i = 0; i < q.options.length; i++) {
+      answers[qId].push(false);
+    }
+  }
+  answers[qId][idx] = !answers[qId][idx];
+  recalcScores();
+  showQ(qId);
+}
+
+function advanceFrom(qId) {
+  var ai = getAllIndex(qId);
+  for (var j = ai + 1; j < allQuestions.length; j++) {
+    var nq = allQuestions[j];
+    if (nq.condition === null || nq.condition()) {
+      showQ(nq.id);
+      return;
+    }
+  }
+  showResults();
+}
+
+// ============================================================
+// LEVEL HELPER
+// ============================================================
+function getLevel(s) {
+  if (s <= -3) return "critical";
+  if (s <= -1) return "weak";
+  if (s <= 2) return "neutral";
+  if (s <= 5) return "solid";
+  return "strong";
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+  recalcScores();
+
+  var allCats = [
+    { key: "resume", name: "Resume", score: scores.resume, priority: 0 },
+    { key: "targeting", name: "Targeting", score: scores.targeting, priority: 1 },
+    { key: "gettingInterviews", name: "Getting Interviews", score: scores.gettingInterviews, priority: 2 },
+    { key: "networking", name: "Networking", score: scores.networking, priority: 3 },
+    { key: "earlyStage", name: "Early Stage Interviews", score: scores.earlyStage, priority: 4 },
+    { key: "midStage", name: "Mid Stage Interviews", score: scores.midStage, priority: 5 },
+    { key: "lateStage", name: "Late Stage Interviews", score: scores.lateStage, priority: 6 },
+    { key: "volume", name: "Volume", score: scores.volume, priority: 7 }
+  ];
+
+  var scored = [];
+  for (var i = 0; i < allCats.length; i++) {
+    var c = allCats[i];
+    if ((c.key === "earlyStage" || c.key === "midStage" || c.key === "lateStage") && !hasInterviews()) continue;
+    if (c.key === "gettingInterviews" && numericAnswers["q9"] === undefined) continue;
+    scored.push(c);
+  }
+
+  scored.sort(function(a, b) {
+    if (a.score !== b.score) return a.score - b.score;
+    return a.priority - b.priority;
+  });
+
+  var weakCount = 0;
+  var strongCount = 0;
+  for (var i2 = 0; i2 < scored.length; i2++) {
+    var lv = getLevel(scored[i2].score);
+    if (lv === "critical" || lv === "weak") weakCount++;
+    if (lv === "solid" || lv === "strong") strongCount++;
+  }
+
+  var opening = "";
+  if (weakCount === 0 && strongCount >= 3) {
+    opening = "Your job search fundamentals are solid. The issue is not what you are doing wrong. It is what you could be doing more of.";
+  } else if (weakCount <= 1 && strongCount >= 2) {
+    opening = "There is a pattern here. Your search has real strengths, but there are specific areas where effort is being wasted or misdirected.";
+  } else if (weakCount <= 2) {
+    opening = "Your job search needs a reset. Not a complete overhaul, but a serious reassessment of where you are spending your time and energy.";
+  } else {
+    opening = "You are working hard, but the strategy is not working. That is not a judgment. It is a starting point. Here is where to focus.";
+  }
+
+  var primary = scored[0];
+  var primaryLevel = getLevel(primary.score);
+
+  var secondaries = [];
+  for (var j = 1; j < scored.length; j++) {
+    var sl = getLevel(scored[j].score);
+    if (sl === "critical" || sl === "weak") secondaries.push(scored[j]);
+  }
+
+  var strengths = [];
+  for (var k = 0; k < scored.length; k++) {
+    var stl = getLevel(scored[k].score);
+    if (stl === "solid" || stl === "strong") strengths.push(scored[k]);
+  }
+
+  var h = '<h1>Job Search Weakpoints</h1>'
+    + '<p class="sub">A Diagnostic Tool / by Anto Park</p>'
+    + '<div class="results-wrap">';
+  h += '<div class="r-opening">' + opening + '</div>';
+
+  if (primaryLevel === "critical" || primaryLevel === "weak") {
+    h += '<div class="r-section">';
+    h += '<div class="r-section-title">Your biggest area of concern: ' + primary.name + '</div>';
+    h += '<div class="r-text">' + getPrimaryReading(primary.key) + '</div>';
+    h += '</div>';
+  } else {
+    h += '<div class="r-section">';
+    h += '<div class="r-section-title">No major weaknesses detected</div>';
+    h += '<div class="r-text">' + getNoWeaknessReading() + '</div>';
+    h += '</div>';
+  }
+
+  if (secondaries.length > 0) {
+    h += '<div class="r-section">';
+    h += '<div class="r-section-title">Also worth noting</div>';
+    for (var m = 0; m < secondaries.length; m++) {
+      h += '<div class="r-text">' + getSecondaryReading(secondaries[m].key) + '</div>';
+    }
+    h += '</div>';
+  }
+
+  if (strengths.length > 0) {
+    h += '<div class="r-section">';
+    h += '<div class="r-section-title">Working in your favor</div>';
+    for (var n = 0; n < strengths.length; n++) {
+      h += '<div class="r-strength">' + strengths[n].name + ' is not the issue here.</div>';
+    }
+    h += '</div>';
+  }
+
+  h += '<div class="r-closing">' + getClosingLine() + '</div>';
+  h += '</div>';
+  h += '<div class="center"><button class="nav" onclick="showBegin()">Start Over</button></div>';
+
+  B.innerHTML = h;
+}
+
+// ============================================================
+// PRIMARY READINGS
+// ============================================================
+function getPrimaryReading(key) {
+  if (key === "resume") {
+    var t = "Your resume is the bottleneck. This is not about whether it looks good to you. It is about whether it communicates the right things to someone who will spend 6 to 10 seconds scanning it. If you are using one version of your resume for every application, you are making it harder for yourself than it needs to be. Different roles emphasize different skills, and your resume should reflect that. Have it reviewed by someone in your target industry, not just a friend who says it looks fine. The gap between a resume that feels good and a resume that performs well is larger than most people think.";
+    if (flags.COLD_APPS_WORKING) t += " That said, your cold applications are producing interviews, which means the resume is not broken. It may just need refinement for specific roles.";
+    if (flags.NETWORKING_CARRYING) t += " Your interviews are coming from networking, not from your resume. If you are satisfied with your interview volume, this may not matter. But if you want more interviews, the resume is the place to invest.";
+    return t;
+  }
+  if (key === "targeting") {
+    return "You are casting too wide a net. Applying for jobs you are not qualified for does not increase your chances. It dilutes your data and wastes your time. Every unqualified application is noise that makes it harder to tell if your resume is actually working. Narrow your focus. Apply for roles where your experience genuinely aligns. You will send fewer applications, but the ones you send will actually have a chance.";
+  }
+  if (key === "volume") {
+    if (flags.EXTREME_VOLUME) return "You have sent over 1,000 applications. Something is not working, and sending more applications using the same approach will not fix it. This is not a volume problem. It is a strategy problem. Step back and rethink your approach from the ground up: your resume, what you are applying for, and how you are applying.";
+    var v = "You have not applied to enough jobs to know what is working and what is not. The job search is a numbers game, and right now your sample size is too small to diagnose anything with confidence. Keep applying. Apply strategically, but apply consistently. You need more data before you can make meaningful adjustments.";
+    if (flags.SMALL_SAMPLE) v += " With fewer than 50 applications, it is genuinely too early to draw conclusions about your resume, your targeting, or your response rate. Keep going.";
+    return v;
+  }
+  if (key === "networking") {
+    if (flags.HIGH_RECRUITER_CONNECTIONS) return "You have connected with a large number of recruiters and it has not led to a job. The networking volume is not the issue. Something else is. Look at your resume, your messaging, or whether you are targeting the right roles.";
+    var n = "Your networking is underdeveloped. Cold applications have a 1 to 3% response rate on average. Networking and referrals dramatically improve those odds. If you are not actively connecting with recruiters, engaging on LinkedIn, and leveraging your existing connections for referrals, you are leaving the most effective job search tool on the table.";
+    if (flags.NO_LINKEDIN) n += " You do not have a LinkedIn account. Create one. It is the single most effective platform for professional networking and job searching. This is not optional.";
+    if (flags.DIDNT_KNOW_LIMIT) n += " You get 5 personalized connection requests per month on a free LinkedIn account. Use all of them. Every month.";
+    if (flags.REFERRAL_BLIND_SPOT) n += " You have not thought about how many of your connections could refer you. The answer is probably more than you think. Anyone you are connected to can be a referral if you are qualified for a role at their company.";
+    if (flags.CONNECTIONS_NOT_CONVERTING) n += " You have connected with recruiters, but none of those connections have led to interviews. Your outreach messages may need work. The connections are there, but they are not converting.";
+    return n;
+  }
+  if (key === "gettingInterviews") {
+    var g = "You are not getting enough interviews relative to the effort you are putting in. This is usually a resume problem, a targeting problem, or both. If your networking is producing interviews but your cold applications are not, the resume is the weak link. If neither method is producing interviews, step back and look at the full picture: what you are applying for, how you are applying, and what your resume actually communicates.";
+    if (flags.ZERO_INTERVIEWS_HIGH_APPS) g += " You have sent over 100 applications with zero interviews. Your resume is very likely the problem. Get it reviewed. Not by a friend. By someone who reviews resumes professionally or who works in your target industry.";
+    if (flags.ZERO_INTERVIEWS_LOW_APPS) g += " That said, your application count is still relatively low. Keep applying while you reassess your resume and networking strategy.";
+    if (flags.WANTS_MORE_INTERVIEWS) g += " You have said you want more interviews. That means either your resume needs to improve, your networking needs to increase, or both.";
+    return g;
+  }
+  if (key === "earlyStage") {
+    var e = "You are getting interviews, but you are not making it past the first call. This is the gatekeeper stage. Recruiter screens and HR calls are designed to filter out candidates who are not a fit on basic criteria: salary expectations, location, experience alignment, and general communication. If you are consistently failing here, think about your pitch. Can you clearly and concisely explain who you are, what you want, and why this specific role interests you? If your answers feel generic, they probably sound generic.";
+    if (flags.FAILING_ALL_FIRST_CALLS) e += " You have had multiple first interviews and have not advanced past any of them. This is a pattern. Something about your presentation in these calls is not landing. Practice your intro. Prepare specific reasons for wanting each role. Make sure your salary expectations are realistic for the market.";
+    if (flags.FAILING_OAS) e += " You are not passing online assessments. This is a technical skills gap. Practice on LeetCode, HackerRank, or the equivalent for your field. There is no shortcut here.";
+    if (flags.PASS_OA_FAIL_CALL) e += " You are passing OAs but failing the first call. Your base technical skills are fine. The issue is likely in how you present yourself verbally. Practice talking through your thought process and your background out loud.";
+    if (flags.NOT_PRACTICING) e += " You are not practicing interview questions. This alone could be the issue. Most interviews use the same rotation of questions. Practice them.";
+    return e;
+  }
+  if (key === "midStage") {
+    return "You are making it past the first call, but stalling at the second or third interview. This is where depth matters. Second and third interviews are where they test whether you can actually do the job and whether you would be a good fit on the team. For technical roles, this means demonstrating real proficiency, not just surface knowledge. For non-technical roles, behavioral questions carry significant weight. Can you talk about your failures, your disagreements, your accomplishments with specific, detailed examples? If your answers are vague or rehearsed sounding, that is likely what is holding you back. Practice telling stories from your experience that demonstrate problem solving, collaboration, and self awareness.";
+  }
+  if (key === "lateStage") {
+    return "You are making it to the final rounds. This is genuinely impressive and means there is very little wrong with you as a candidate. Final round rejections are often about factors outside your control: internal candidates, budget changes, team dynamics, or simply another candidate who was a marginally better fit. If you are consistently reaching final interviews, your strategy is working. Do not change it. Keep going. The offer will come.";
+  }
+  return "";
+}
+
+// ============================================================
+// NO WEAKNESS READING
+// ============================================================
+function getNoWeaknessReading() {
+  if (hasInterviews()) {
+    return "Based on your answers, there are no glaring weaknesses in your job search. Your fundamentals are in place. This does not mean everything is perfect, but it means the major categories are not raising red flags. Continue what you are doing, stay consistent, and focus on the areas below where there is still room to grow.";
+  }
+  return "Based on your answers, the foundational elements of your job search appear to be in reasonable shape. As you accumulate more interviews, you will be able to better assess your performance in the interview process itself. For now, stay the course and keep building momentum.";
+}
+
+// ============================================================
+// SECONDARY READINGS
+// ============================================================
+function getSecondaryReading(key) {
+  if (key === "resume") return "There is also something worth noting about your resume. You may be relying on a single version that does not adapt to different roles. Even small adjustments to highlight relevant experience can make a meaningful difference in your response rate.";
+  if (key === "targeting") return "There is also something worth noting about your targeting. A portion of your applications may be going to roles that are not a strong fit, which dilutes your overall response rate and makes it harder to assess what is actually working.";
+  if (key === "volume") return "There is also something worth noting about your application volume. Your sample size may not be large enough to draw firm conclusions yet. Keep applying while you address other areas.";
+  if (key === "networking") return "There is also something worth noting about your networking. Your outreach activity is lower than it could be. Even modest increases in recruiter connections and LinkedIn engagement can open doors that cold applications cannot.";
+  if (key === "gettingInterviews") return "There is also something worth noting about your interview conversion rate. The number of interviews you are getting relative to your applications suggests there is room to improve, likely through resume refinement or increased networking.";
+  if (key === "earlyStage") return "There is also something worth noting about your early stage interview performance. You may be losing momentum in recruiter screens or first calls. Revisit your pitch and make sure you have clear, specific reasons for wanting each role you interview for.";
+  if (key === "midStage") return "There is also something worth noting about your mid stage interview performance. You are getting past the first call but stalling after that. This often comes down to depth. Practice talking about your experience with specific examples and stories, not generalizations.";
+  if (key === "lateStage") return "There is also something worth noting about your late stage interview performance. You are getting deep into processes but not closing. This is often outside your control, but make sure you are bringing energy and enthusiasm all the way through the final round.";
+  return "";
+}
+
+// ============================================================
+// CLOSING LINE
+// ============================================================
+function getClosingLine() {
+  var a = answers["q18"];
+  if (a === 0) return "You are early in your search. Take this reading as a starting point, not a verdict. Check back in after you have more data.";
+  if (a === 1) return "You are in the thick of it. This is the phase where most people start to feel the weight of the search. Focus on the weakest area identified above.";
+  if (a === 2) return "A search this long can be demoralizing, but it is not uncommon, especially in the current market. The fact that you are here trying to diagnose the problem means you are still in the fight. Focus on the weakest area identified above.";
+  if (a === 3) return "A long search takes a toll. But length alone does not mean something is fundamentally wrong. It often means the strategy needs adjustment, not abandonment. Focus on the primary weakness above and give it 4 to 6 weeks of focused effort before reassessing.";
+  if (a === 4) return "A search this long is exhausting. There is no sugarcoating that. But if you are still here, still trying to improve, that persistence matters. Look at the primary weakness above. That is where your next breakthrough is most likely to come from.";
+  return "";
+}
+
+// ============================================================
+// INIT
+// ============================================================
+showBegin();
+</script>
+
+</body>
+</html>
