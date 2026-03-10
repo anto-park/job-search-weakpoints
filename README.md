@@ -14,4 +14,4 @@ Anto
 
 Direct Link:
 
-link will go here
+[link will go here](https://anto-park.github.io/job-search-weakpoints/)
