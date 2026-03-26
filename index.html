@@ -593,7 +593,7 @@ function showBegin() {
   B.innerHTML = '<div class="start-wrap">'
     + '<h1>Job Search Weakpoints</h1>'
     + '<p class="sub">A Diagnostic Tool / by Anto Park</p>'
-    + '<p class="intro">This tool asks you a series of questions about your job search and identifies where you might be struggling. It is not a test. There are no wrong answers. Answer honestly and you will get an honest reading.</p>'
+    + '<p class="intro">This tool asks you a series of questions about your job search and identifies where you might be struggling. It is not a test. There are no wrong answers. Answer honestly for accurate results.</p>'
     + '<div class="center"><button class="big" onclick="showQ(\'q1\')">Begin</button></div>'
     + '</div>';
 }
@@ -780,13 +780,13 @@ function showResults() {
 
   var opening = "";
   if (weakCount === 0 && strongCount >= 3) {
-    opening = "Your job search fundamentals are solid. The issue is not what you are doing wrong. It is what you could be doing more of.";
+    opening = "Your job search fundamentals are solid. The issue isn't what you're doing wrong. It's what you could be doing more of.";
   } else if (weakCount <= 1 && strongCount >= 2) {
     opening = "There is a pattern here. Your search has real strengths, but there are specific areas where effort is being wasted or misdirected.";
   } else if (weakCount <= 2) {
-    opening = "Your job search needs a reset. Not a complete overhaul, but a serious reassessment of where you are spending your time and energy.";
+    opening = "Your job search needs a reset. Not a complete overhaul, but a serious reassessment of where you're spending your time and energy.";
   } else {
-    opening = "You are working hard, but the strategy is not working. That is not a judgment. It is a starting point. Here is where to focus.";
+    opening = "You're working hard, but the strategy isn't working. Let's rethink our strategy. Here's where to focus.";
   }
 
   var primary = scored[0];
@@ -851,49 +851,49 @@ function showResults() {
 // ============================================================
 function getPrimaryReading(key) {
   if (key === "resume") {
-    var t = "Your resume is the bottleneck. This is not about whether it looks good to you. It is about whether it communicates the right things to someone who will spend 6 to 10 seconds scanning it. If you are using one version of your resume for every application, you are making it harder for yourself than it needs to be. Different roles emphasize different skills, and your resume should reflect that. Have it reviewed by someone in your target industry, not just a friend who says it looks fine. The gap between a resume that feels good and a resume that performs well is larger than most people think.";
+    var t = "Your resume is the bottleneck. This isn't about whether it looks good to you. It's about whether it communicates the right things to someone who will spend 6 to 10 seconds scanning it. If you're using one version of your resume for every application, you're making it harder for yourself than it needs to be. Different roles emphasize different skills, and your resume should reflect that. Have it reviewed by a decision maker (recruiter, hiring manager, career counselors) in your industry, not just a friend who will say it looks good. The gap between a resume that feels good and a resume that performs well is larger than most people think.";
     if (flags.COLD_APPS_WORKING) t += " That said, your cold applications are producing interviews, which means the resume is not broken. It may just need refinement for specific roles.";
     if (flags.NETWORKING_CARRYING) t += " Your interviews are coming from networking, not from your resume. If you are satisfied with your interview volume, this may not matter. But if you want more interviews, the resume is the place to invest.";
     return t;
   }
   if (key === "targeting") {
-    return "You are casting too wide a net. Applying for jobs you are not qualified for does not increase your chances. It dilutes your data and wastes your time. Every unqualified application is noise that makes it harder to tell if your resume is actually working. Narrow your focus. Apply for roles where your experience genuinely aligns. You will send fewer applications, but the ones you send will actually have a chance.";
+    return "You're casting too wide a net. Applying for jobs you're not qualified for doesn't increase your chances, but only wastes your time and energy. Every unqualified application is noise that makes it harder to tell if your resume is actually working. Narrow your focus. Apply for roles where your experience genuinely aligns. You will send fewer applications, but the ones you send will stand a better chance.";
   }
   if (key === "volume") {
-    if (flags.EXTREME_VOLUME) return "You have sent over 1,000 applications. Something is not working, and sending more applications using the same approach will not fix it. This is not a volume problem. It is a strategy problem. Step back and rethink your approach from the ground up: your resume, what you are applying for, and how you are applying.";
-    var v = "You have not applied to enough jobs to know what is working and what is not. The job search is a numbers game, and right now your sample size is too small to diagnose anything with confidence. Keep applying. Apply strategically, but apply consistently. You need more data before you can make meaningful adjustments.";
-    if (flags.SMALL_SAMPLE) v += " With fewer than 50 applications, it is genuinely too early to draw conclusions about your resume, your targeting, or your response rate. Keep going.";
+    if (flags.EXTREME_VOLUME) return "You have sent over 1,000 applications. Something is not working, and sending more applications using the same approach will not fix it. This is an issue. Step back and rethink your approach from the ground up: your resume, what you're applying for, and how you're applying.";
+    var v = "You haven't applied to enough jobs to know what is working and what is not. The job search is a numbers game, and right now your sample size is too small to diagnose anything with confidence. Keep applying. Apply strategically, but apply consistently. You need more data before you can make meaningful adjustments.";
+    if (flags.SMALL_SAMPLE) v += " With fewer than 50 applications, it's genuinely too early to draw conclusions about your resume, your targeting, or your response rate. Keep going.";
     return v;
   }
   if (key === "networking") {
-    if (flags.HIGH_RECRUITER_CONNECTIONS) return "You have connected with a large number of recruiters and it has not led to a job. The networking volume is not the issue. Something else is. Look at your resume, your messaging, or whether you are targeting the right roles.";
-    var n = "Your networking is underdeveloped. Cold applications have a 1 to 3% response rate on average. Networking and referrals dramatically improve those odds. If you are not actively connecting with recruiters, engaging on LinkedIn, and leveraging your existing connections for referrals, you are leaving the most effective job search tool on the table.";
-    if (flags.NO_LINKEDIN) n += " You do not have a LinkedIn account. Create one. It is the single most effective platform for professional networking and job searching. This is not optional.";
+    if (flags.HIGH_RECRUITER_CONNECTIONS) return "You've connected with a large number of recruiters and it hasn't led to a job. The networking volume is not the issue. Something else is. Look at your resume, your messaging, or whether you're targeting the right roles.";
+    var n = "Your networking is underdeveloped. Cold applications have a 1 to 3% response rate on average. Networking and referrals dramatically improve those odds. If you're not actively connecting with recruiters, engaging on LinkedIn, and leveraging your existing connections for referrals, you're leaving the most effective job search tool on the table.";
+    if (flags.NO_LINKEDIN) n += " You don't have a LinkedIn account. Create one. It is the single most effective platform for professional networking and job searching. Taking the job search seriously means creating a LinkedIn account (unfortunately).";
     if (flags.DIDNT_KNOW_LIMIT) n += " You get 5 personalized connection requests per month on a free LinkedIn account. Use all of them. Every month.";
-    if (flags.REFERRAL_BLIND_SPOT) n += " You have not thought about how many of your connections could refer you. The answer is probably more than you think. Anyone you are connected to can be a referral if you are qualified for a role at their company.";
-    if (flags.CONNECTIONS_NOT_CONVERTING) n += " You have connected with recruiters, but none of those connections have led to interviews. Your outreach messages may need work. The connections are there, but they are not converting.";
+    if (flags.REFERRAL_BLIND_SPOT) n += " You haven't thought about how many of your connections could refer you. The answer is probably more than you think. Anyone you are connected to can be a referral if you're qualified for a role at their company.";
+    if (flags.CONNECTIONS_NOT_CONVERTING) n += " You have connected with recruiters, but none of those connections have led to interviews. Your outreach messages may need work. The connections are there, but they're not converting.";
     return n;
   }
   if (key === "gettingInterviews") {
-    var g = "You are not getting enough interviews relative to the effort you are putting in. This is usually a resume problem, a targeting problem, or both. If your networking is producing interviews but your cold applications are not, the resume is the weak link. If neither method is producing interviews, step back and look at the full picture: what you are applying for, how you are applying, and what your resume actually communicates.";
-    if (flags.ZERO_INTERVIEWS_HIGH_APPS) g += " You have sent over 100 applications with zero interviews. Your resume is very likely the problem. Get it reviewed. Not by a friend. By someone who reviews resumes professionally or who works in your target industry.";
+    var g = "You aren't getting enough interviews relative to the effort you're putting in. This is usually a resume problem, a targeting problem, or both. If your networking is producing interviews but your cold applications are not, the resume is the weak link. If neither method is producing interviews, step back and look at the full picture: what you're applying for, how you're applying, and what your resume actually communicates.";
+    if (flags.ZERO_INTERVIEWS_HIGH_APPS) g += " You have sent over 100 applications with zero interviews. Your resume is very likely the problem. Get it reviewed. Not by a friend. By a respected career counselor/coach or someone who works in your target industry as a recruiter.";
     if (flags.ZERO_INTERVIEWS_LOW_APPS) g += " That said, your application count is still relatively low. Keep applying while you reassess your resume and networking strategy.";
-    if (flags.WANTS_MORE_INTERVIEWS) g += " You have said you want more interviews. That means either your resume needs to improve, your networking needs to increase, or both.";
+    if (flags.WANTS_MORE_INTERVIEWS) g += " You've said you want more interviews. That means either your resume needs to improve, your networking needs to increase, or both.";
     return g;
   }
   if (key === "earlyStage") {
-    var e = "You are getting interviews, but you are not making it past the first call. This is the gatekeeper stage. Recruiter screens and HR calls are designed to filter out candidates who are not a fit on basic criteria: salary expectations, location, experience alignment, and general communication. If you are consistently failing here, think about your pitch. Can you clearly and concisely explain who you are, what you want, and why this specific role interests you? If your answers feel generic, they probably sound generic.";
-    if (flags.FAILING_ALL_FIRST_CALLS) e += " You have had multiple first interviews and have not advanced past any of them. This is a pattern. Something about your presentation in these calls is not landing. Practice your intro. Prepare specific reasons for wanting each role. Make sure your salary expectations are realistic for the market.";
-    if (flags.FAILING_OAS) e += " You are not passing online assessments. This is a technical skills gap. Practice on LeetCode, HackerRank, or the equivalent for your field. There is no shortcut here.";
-    if (flags.PASS_OA_FAIL_CALL) e += " You are passing OAs but failing the first call. Your base technical skills are fine. The issue is likely in how you present yourself verbally. Practice talking through your thought process and your background out loud.";
-    if (flags.NOT_PRACTICING) e += " You are not practicing interview questions. This alone could be the issue. Most interviews use the same rotation of questions. Practice them.";
+    var e = "You're getting interviews, but you aren't making it past the first call. This is the gatekeeper stage. Recruiter screens and HR calls are designed to filter out candidates who are not a fit on basic criteria: salary expectations, location, experience alignment, and general communication. If you're consistently failing here, think about your pitch. Can you clearly and concisely explain who you are, what you want, and why this specific role interests you? If your answers feel generic, they probably sound generic.";
+    if (flags.FAILING_ALL_FIRST_CALLS) e += " You've had multiple first interviews and haven't advanced past any of them. This is a pattern. Something about your presentation in these calls is not landing. Practice your intro. Prepare specific reasons for wanting each role. Make sure your salary expectations are realistic for the market.";
+    if (flags.FAILING_OAS) e += " You aren't passing online assessments. This is a technical skills gap. Practice on LeetCode, HackerRank, or the equivalent for your field. There is no shortcut here. Practice out loud as if someone is actively judging the way you're speaking.";
+    if (flags.PASS_OA_FAIL_CALL) e += " You're passing OAs but failing the first call. Your base technical skills are fine. The issue is likely in how you present yourself verbally. Practice talking through your thought process and your background out loud.";
+    if (flags.NOT_PRACTICING) e += " You aren't practicing interview questions. This alone could be the issue. Most interviews use the same rotation of questions. Practice them.";
     return e;
   }
   if (key === "midStage") {
-    return "You are making it past the first call, but stalling at the second or third interview. This is where depth matters. Second and third interviews are where they test whether you can actually do the job and whether you would be a good fit on the team. For technical roles, this means demonstrating real proficiency, not just surface knowledge. For non-technical roles, behavioral questions carry significant weight. Can you talk about your failures, your disagreements, your accomplishments with specific, detailed examples? If your answers are vague or rehearsed sounding, that is likely what is holding you back. Practice telling stories from your experience that demonstrate problem solving, collaboration, and self awareness.";
+    return "You're making it past the first call, but stalling at the second or third interview. This is where depth matters. Second and third interviews are where they test whether you can actually do the job and whether you would be a good fit on the team. For technical roles, this means demonstrating real proficiency, not just surface knowledge. For non-technical roles, behavioral questions carry significant weight. Can you talk about your failures, your disagreements, your accomplishments with specific, detailed examples? If your answers are vague or rehearsed sounding, that is likely what is holding you back. Practice telling stories from your experience that demonstrate problem solving, collaboration, and self awareness.";
   }
   if (key === "lateStage") {
-    return "You are making it to the final rounds. This is genuinely impressive and means there is very little wrong with you as a candidate. Final round rejections are often about factors outside your control: internal candidates, budget changes, team dynamics, or simply another candidate who was a marginally better fit. If you are consistently reaching final interviews, your strategy is working. Do not change it. Keep going. The offer will come.";
+    return "You're making it to the final rounds. This is genuinely impressive and means there is very little wrong with you as a candidate. Final round rejections are often about factors outside your control: internal candidates, budget changes, team dynamics, or simply another candidate who was a marginally better fit. If you're consistently reaching final interviews, your strategy is working. Do not change it. Keep going. The offer will come. This is the true Numbers Game.";
   }
   return "";
 }
@@ -903,7 +903,7 @@ function getPrimaryReading(key) {
 // ============================================================
 function getNoWeaknessReading() {
   if (hasInterviews()) {
-    return "Based on your answers, there are no glaring weaknesses in your job search. Your fundamentals are in place. This does not mean everything is perfect, but it means the major categories are not raising red flags. Continue what you are doing, stay consistent, and focus on the areas below where there is still room to grow.";
+    return "Based on your answers, there are no glaring weaknesses in your job search. Your fundamentals are in place. This does not mean everything is perfect, but it means the major categories are not raising red flags. Continue what you are doing, stay consistent, and focus on the areas below where there's still room to grow.";
   }
   return "Based on your answers, the foundational elements of your job search appear to be in reasonable shape. As you accumulate more interviews, you will be able to better assess your performance in the interview process itself. For now, stay the course and keep building momentum.";
 }
@@ -912,14 +912,14 @@ function getNoWeaknessReading() {
 // SECONDARY READINGS
 // ============================================================
 function getSecondaryReading(key) {
-  if (key === "resume") return "There is also something worth noting about your resume. You may be relying on a single version that does not adapt to different roles. Even small adjustments to highlight relevant experience can make a meaningful difference in your response rate.";
-  if (key === "targeting") return "There is also something worth noting about your targeting. A portion of your applications may be going to roles that are not a strong fit, which dilutes your overall response rate and makes it harder to assess what is actually working.";
-  if (key === "volume") return "There is also something worth noting about your application volume. Your sample size may not be large enough to draw firm conclusions yet. Keep applying while you address other areas.";
-  if (key === "networking") return "There is also something worth noting about your networking. Your outreach activity is lower than it could be. Even modest increases in recruiter connections and LinkedIn engagement can open doors that cold applications cannot.";
-  if (key === "gettingInterviews") return "There is also something worth noting about your interview conversion rate. The number of interviews you are getting relative to your applications suggests there is room to improve, likely through resume refinement or increased networking.";
-  if (key === "earlyStage") return "There is also something worth noting about your early stage interview performance. You may be losing momentum in recruiter screens or first calls. Revisit your pitch and make sure you have clear, specific reasons for wanting each role you interview for.";
-  if (key === "midStage") return "There is also something worth noting about your mid stage interview performance. You are getting past the first call but stalling after that. This often comes down to depth. Practice talking about your experience with specific examples and stories, not generalizations.";
-  if (key === "lateStage") return "There is also something worth noting about your late stage interview performance. You are getting deep into processes but not closing. This is often outside your control, but make sure you are bringing energy and enthusiasm all the way through the final round.";
+  if (key === "resume") return "There's also something worth noting about your resume. You may be relying on a single version that doesn't adapt to different roles. Even small adjustments to highlight relevant experience can make a meaningful difference in your response rate.";
+  if (key === "targeting") return "There's also something worth noting about your targeting. A portion of your applications may be going to roles that are not a strong fit, which dilutes your overall response rate and makes it harder to assess what is actually working.";
+  if (key === "volume") return "There's also something worth noting about your application volume. Your sample size may not be large enough to draw firm conclusions yet. Keep applying while you address other areas.";
+  if (key === "networking") return "There's also something worth noting about your networking. Your outreach activity is lower than it could be. Even modest increases in recruiter connections and LinkedIn engagement could open doors that cold applications cannot.";
+  if (key === "gettingInterviews") return "There's also something worth noting about your interview conversion rate. The number of interviews you're getting relative to your applications suggests there is room to improve, likely through resume refinement or increased networking.";
+  if (key === "earlyStage") return "There's also something worth noting about your early stage interview performance. You may be losing momentum in recruiter screens or first calls. Revisit your pitch and make sure you have clear, specific reasons for wanting each role you interview for.";
+  if (key === "midStage") return "There's also something worth noting about your mid stage interview performance. You're getting past the first call but stalling after that. This often comes down to depth. Practice talking about your experience with specific examples and stories, not generalizations.";
+  if (key === "lateStage") return "There's also something worth noting about your late stage interview performance. You're getting deep into processes but not closing. This is often outside your control, but make sure you are bringing energy and enthusiasm all the way through the final round.";
   return "";
 }
 
@@ -928,11 +928,11 @@ function getSecondaryReading(key) {
 // ============================================================
 function getClosingLine() {
   var a = answers["q18"];
-  if (a === 0) return "You are early in your search. Take this reading as a starting point, not a verdict. Check back in after you have more data.";
-  if (a === 1) return "You are in the thick of it. This is the phase where most people start to feel the weight of the search. Focus on the weakest area identified above.";
-  if (a === 2) return "A search this long can be demoralizing, but it is not uncommon, especially in the current market. The fact that you are here trying to diagnose the problem means you are still in the fight. Focus on the weakest area identified above.";
+  if (a === 0) return "You're early in your search. Take this analysis as a starting point, not a verdict. Check back in after you have more data.";
+  if (a === 1) return "You're in the thick of it. This is the phase where most people start to feel the weight of the search. Focus on the weakest area identified above.";
+  if (a === 2) return "A search this long can be demoralizing, but it isn't uncommon, especially in the current market. The fact that you're here trying to diagnose the problem means you're still in the fight. Focus on the weakest area identified above.";
   if (a === 3) return "A long search takes a toll. But length alone does not mean something is fundamentally wrong. It often means the strategy needs adjustment, not abandonment. Focus on the primary weakness above and give it 4 to 6 weeks of focused effort before reassessing.";
-  if (a === 4) return "A search this long is exhausting. There is no sugarcoating that. But if you are still here, still trying to improve, that persistence matters. Look at the primary weakness above. That is where your next breakthrough is most likely to come from.";
+  if (a === 4) return "A search this long is exhausting. There's no sugarcoating that. But if you're still here, still trying to improve, that persistence matters. Look at the primary weakness above. That is where your next breakthrough is most likely to come from.";
   return "";
 }
 
